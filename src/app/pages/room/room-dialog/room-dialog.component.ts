@@ -34,7 +34,7 @@ export class RoomDialogComponent {
   private readonly dialogRef = inject(MatDialogRef<RoomDialogComponent>);
   
   protected $form = signal(new FormGroup({
-    idRoom: new FormControl<number>(this.data?.idRoom || 0),
+    idRoom: new FormControl<number>(this.data?.idRoom || null),
     number: new FormControl<string>(this.data?.number || '',[Validators.required]),
     type: new FormControl<string>(this.data?.type || '',[Validators.required, Validators.minLength(3)]),
     price: new FormControl<number>(this.data?.price || 0, [Validators.required, Validators.min(1)]),

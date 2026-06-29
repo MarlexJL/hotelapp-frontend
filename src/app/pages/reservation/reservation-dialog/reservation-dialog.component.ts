@@ -14,6 +14,7 @@ import { RoomService } from '../../../services/room.service';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { provideNativeDateAdapter } from '@angular/material/core';
+import { format } from 'date-fns';
 
 @Component({
   selector: 'app-reservation-dialog',
@@ -39,7 +40,7 @@ export class ReservationDialogComponent {
   private readonly dialogRef = inject(MatDialogRef<ReservationDialogComponent>);
 
   protected $form = signal(new FormGroup({
-    idReservation: new FormControl<number>(this.data?.idReservation || 0),
+    idReservation: new FormControl<number>(this.data?.idReservation || null),
     customerName: new FormControl<string>(this.data?.customerName || '', [Validators.required, Validators.minLength(3)]),
     idRoom: new FormControl<number>(this.data?.idRoom || null, [Validators.required, Validators.min(1)]),
     checkInDate: new FormControl<string>(this.data?.checkInDate || '', [Validators.required]),
@@ -52,11 +53,26 @@ export class ReservationDialogComponent {
 
   protected $minDate = signal(new Date());
 
+  private formatDate(date: any): string {
+    if (!date) return '';
+    const d = new Date(date);
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
+
   operate() {
     if (this.$form().invalid) return;
 
-    const reservation: Reservation = this.$form().value as Reservation;
+    const formValue = this.$form().value;
     const isEdit = this.$isEdit();
+    const reservation: Reservation = {
+      ...formValue,
+      idReservation: isEdit ? formValue.idReservation : null,
+      checkInDate: format(formValue.checkInDate, "yyyy-MM-dd'T'HH:mm:ss"),
+      checkOutDate: format(formValue.checkOutDate, "yyyy-MM-dd'T'HH:mm:ss")
+    } as Reservation;
     const msg = isEdit ? 'UPDATED' : 'CREATED';
     const operation$ = isEdit
       ? this.reservationService.update(reservation.idReservation, reservation)
