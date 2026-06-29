@@ -1,34 +1,60 @@
 <mat-dialog-content>
-    <mat-toolbar>
-        <span>Room Info</span>
-    </mat-toolbar>
+  <mat-toolbar>
+    <span>Room Info</span>
+  </mat-toolbar>
 
-    <div class="example-container">
-        <mat-form-field>
-            <input matInput placeholder="Room Number" [(ngModel)]="$room().number">
-        </mat-form-field>
+  <div class="example-container">
+    <form [formGroup]="$form()">
+      <mat-form-field>
+        <mat-label>Room Number</mat-label>
+        <input matInput placeholder="Room Number" formControlName="number" />
+        @if ($f()['number'].errors?.['required'] && $f()['number'].touched) {
+          <mat-error>Number is required</mat-error>
+        }
+      </mat-form-field>
 
-        <mat-form-field>
-            <input matInput placeholder="Type" [(ngModel)]="$room().type">
-        </mat-form-field>
+      <mat-form-field>
+        <mat-label>Room Type</mat-label>
+        <input matInput placeholder="Room Type" formControlName="type" />
+        @if ($f()['type'].errors?.['required'] && $f()['type'].touched) {
+          <mat-error>Type is required</mat-error>
+        }
+        @if ($f()['type'].errors?.['minlength'] && $f()['type'].touched) {
+          <mat-error>Type must be at least 3 characters</mat-error>
+        }
+      </mat-form-field>
 
-        <mat-form-field>
-            <input matInput placeholder="Price" [(ngModel)]="$room().price">
-        </mat-form-field>
+      <mat-form-field>
+        <mat-label>Room Price</mat-label>
+        <input matInput type="number" placeholder="Room Price" formControlName="price" />
+        @if ($f()['price'].errors?.['required'] && $f()['price'].touched) {
+          <mat-error>Price is required</mat-error>
+        }
+        @if ($f()['price'].errors?.['min'] && $f()['price'].touched) {
+          <mat-error>Price must be greater than 0</mat-error>
+        }
+      </mat-form-field>
 
-        <mat-form-field>
-            <input matInput placeholder="Available" [(ngModel)]="$room().available">
-        </mat-form-field>
+      <mat-form-field>
+        <mat-label>Available</mat-label>
+        <mat-select formControlName="available">
+          <mat-option value="true">SI</mat-option>
+          <mat-option value="false">NO</mat-option>
+        </mat-select>
+        @if ($f()['available'].errors?.['required'] && $f()['available'].touched) {
+          <mat-error>Available is required</mat-error>
+        }
+      </mat-form-field>
+    </form>
 
-        <button mat-flat-button (click)="operate()">
-            <span>OK</span>
-            <mat-icon>done</mat-icon>
-        </button>
+    <button mat-flat-button (click)="operate()">
+      <span>OK</span>
+      <mat-icon>done</mat-icon>
+    </button>
 
-        <button mat-flat-button class="cancel-button" (click)="close()">
-            <span>Cancel</span>
-            <mat-icon>cancel</mat-icon>
-        </button>
-    </div>
-
+    <button mat-flat-button class="cancel-button" (click)="close()">
+      <span>Cancel</span>
+      <mat-icon>cancel</mat-icon>
+    </button>
+  </div>
 </mat-dialog-content>

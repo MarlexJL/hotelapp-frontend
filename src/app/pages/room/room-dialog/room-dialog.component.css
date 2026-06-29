@@ -3,7 +3,16 @@
     flex-direction: column;
 }
 
-.example-container>* {
+.example-container > * {
+    width: 100%;
+}
+
+.example-container form {
+    display: flex;
+    flex-direction: column;
+}
+
+.example-container mat-form-field {
     width: 100%;
 }
 

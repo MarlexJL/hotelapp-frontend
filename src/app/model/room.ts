@@ -3,5 +3,5 @@ export class Room{
     number: string;
     type: string;
     price: number;
-    available: string;
+    available: boolean;
 }

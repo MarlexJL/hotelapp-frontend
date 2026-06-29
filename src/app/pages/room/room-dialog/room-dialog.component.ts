@@ -1,5 +1,5 @@
-import { Component, inject, signal } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { Component, computed, inject, signal } from '@angular/core';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -8,6 +8,8 @@ import { MatInputModule } from '@angular/material/input';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { RoomService } from '../../../services/room.service';
 import { switchMap, tap } from 'rxjs';
+import { MatSelectModule } from '@angular/material/select';
+import { Room } from '../../../model/room';
 
 @Component({
   selector: 'app-room-dialog',
@@ -18,7 +20,8 @@ import { switchMap, tap } from 'rxjs';
     MatInputModule,
     MatButtonModule,
     MatIconModule,
-    FormsModule
+    ReactiveFormsModule,
+    MatSelectModule
   ],
   templateUrl: './room-dialog.component.html',
   styleUrl: './room-dialog.component.css',
@@ -28,11 +31,22 @@ export class RoomDialogComponent {
   private readonly data = inject(MAT_DIALOG_DATA);
   private readonly dialogRef = inject(MatDialogRef<RoomDialogComponent>);
   
-  protected $room = signal({ ... this.data });
+  protected $form = signal(new FormGroup({
+    idRoom: new FormControl<number>(this.data?.idRoom || 0),
+    number: new FormControl<string>(this.data?.number || '',[Validators.required]),
+    type: new FormControl<string>(this.data?.type || '',[Validators.required, Validators.minLength(3)]),
+    price: new FormControl<number>(this.data?.price || 0, [Validators.required, Validators.min(1)]),
+    available: new FormControl<boolean>(this.data?.available === 'true', [Validators.required]),
+  }));
+
+  protected $isEdit = computed(() => this.$form().value.idRoom > 0);
+  protected $f = computed(() => this.$form().controls);
 
   operate(){
-    const room = this.$room();
-    const isEdit = room != null && room.idRoom > 0;
+    if(this.$form().invalid)return;
+
+    const room: Room = this.$form().value as Room;
+    const isEdit =  this.$isEdit();
     const msg = isEdit ? 'UPDATED' : 'CREATED';
     const operation$ = isEdit ? this.roomService.update(room.idRoom, room) : this.roomService.save(room); 
 
