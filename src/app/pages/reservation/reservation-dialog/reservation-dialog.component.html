@@ -17,19 +17,23 @@
       </mat-form-field>
 
       <mat-form-field>
-        <mat-label>Room ID</mat-label>
-        <input matInput type="number" placeholder="Room ID" formControlName="idRoom" />
+        <mat-label>Room</mat-label>
+        <mat-select formControlName="idRoom">
+          @for (r of $rooms(); track r.idRoom) {
+            <mat-option [value]="r.idRoom">{{ r.number }} - {{ r.type }}</mat-option>
+          }
+        </mat-select>
         @if ($f()['idRoom'].errors?.['required'] && $f()['idRoom'].touched) {
           <mat-error>Room is required</mat-error>
-        }
-        @if ($f()['idRoom'].errors?.['min'] && $f()['idRoom'].touched) {
-          <mat-error>Room ID must be valid</mat-error>
         }
       </mat-form-field>
 
       <mat-form-field>
         <mat-label>Check-In Date</mat-label>
-        <input matInput type="date" formControlName="checkInDate" />
+        <input matInput [matDatepicker]="pickerIn" formControlName="checkInDate" [min]="$minDate()" />
+        <mat-hint>DD/MM/YYYY</mat-hint>
+        <mat-datepicker-toggle matIconSuffix [for]="pickerIn"></mat-datepicker-toggle>
+        <mat-datepicker #pickerIn></mat-datepicker>
         @if ($f()['checkInDate'].errors?.['required'] && $f()['checkInDate'].touched) {
           <mat-error>Check-in date is required</mat-error>
         }
@@ -37,7 +41,10 @@
 
       <mat-form-field>
         <mat-label>Check-Out Date</mat-label>
-        <input matInput type="date" formControlName="checkOutDate" />
+        <input matInput [matDatepicker]="pickerOut" formControlName="checkOutDate" [min]="$minDate()" />
+        <mat-hint>DD/MM/YYYY</mat-hint>
+        <mat-datepicker-toggle matIconSuffix [for]="pickerOut"></mat-datepicker-toggle>
+        <mat-datepicker #pickerOut></mat-datepicker>
         @if ($f()['checkOutDate'].errors?.['required'] && $f()['checkOutDate'].touched) {
           <mat-error>Check-out date is required</mat-error>
         }

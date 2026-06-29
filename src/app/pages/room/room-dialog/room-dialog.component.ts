@@ -10,6 +10,7 @@ import { RoomService } from '../../../services/room.service';
 import { switchMap, tap } from 'rxjs';
 import { MatSelectModule } from '@angular/material/select';
 import { Room } from '../../../model/room';
+import { DateAdapter, NativeDateAdapter } from '@angular/material/core';
 
 @Component({
   selector: 'app-room-dialog',
@@ -25,6 +26,7 @@ import { Room } from '../../../model/room';
   ],
   templateUrl: './room-dialog.component.html',
   styleUrl: './room-dialog.component.css',
+  providers: [{provide: DateAdapter, useClass: NativeDateAdapter}]
 })
 export class RoomDialogComponent {
   private readonly roomService = inject(RoomService);

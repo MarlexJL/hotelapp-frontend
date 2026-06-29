@@ -9,6 +9,11 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { switchMap, tap } from 'rxjs';
 import { ReservationService } from '../../../services/reservation.service';
 import { Reservation } from '../../../model/reservation';
+import { MatSelectModule } from '@angular/material/select';
+import { RoomService } from '../../../services/room.service';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { provideNativeDateAdapter } from '@angular/material/core';
 
 @Component({
   selector: 'app-reservation-dialog',
@@ -20,12 +25,16 @@ import { Reservation } from '../../../model/reservation';
     MatButtonModule,
     MatIconModule,
     ReactiveFormsModule,
+    MatSelectModule,
+    MatDatepickerModule,
   ],
+  providers: [provideNativeDateAdapter()],
   templateUrl: './reservation-dialog.component.html',
   styleUrl: './reservation-dialog.component.css',
 })
 export class ReservationDialogComponent {
   private readonly reservationService = inject(ReservationService);
+  private readonly roomService = inject(RoomService);
   private readonly data = inject(MAT_DIALOG_DATA);
   private readonly dialogRef = inject(MatDialogRef<ReservationDialogComponent>);
 
@@ -37,8 +46,11 @@ export class ReservationDialogComponent {
     checkOutDate: new FormControl<string>(this.data?.checkOutDate || '', [Validators.required]),
   }));
 
+  protected $rooms = toSignal(this.roomService.findAll(), { initialValue: [] });
   protected $isEdit = computed(() => this.$form().value.idReservation > 0);
   protected $f = computed(() => this.$form().controls);
+
+  protected $minDate = signal(new Date());
 
   operate() {
     if (this.$form().invalid) return;
