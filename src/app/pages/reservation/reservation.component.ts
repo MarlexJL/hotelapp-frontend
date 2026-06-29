@@ -12,6 +12,8 @@ import { switchMap, tap } from 'rxjs';
 import { ReservationService } from '../../services/reservation.service';
 import { Reservation } from '../../model/reservation';
 import { ReservationDialogComponent } from './reservation-dialog/reservation-dialog.component';
+import { RoomService } from '../../services/room.service';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-reservation',
@@ -30,12 +32,14 @@ import { ReservationDialogComponent } from './reservation-dialog/reservation-dia
 })
 export class ReservationComponent {
   private readonly reservationService = inject(ReservationService);
+  private readonly roomService = inject(RoomService);
   private readonly dialog = inject(MatDialog);
   private readonly snackBar = inject(MatSnackBar);
 
   protected $dataSource = signal(new MatTableDataSource<Reservation>());
   protected displayedColumns: string[] = ['idReservation', 'customerName', 'checkInDate', 'checkOutDate', 'idRoom', 'actions'];
   protected $reservations = this.reservationService.$listChange;
+  protected $rooms = toSignal(this.roomService.findAll(), { initialValue: [] });
 
   protected $paginator = viewChild(MatPaginator);
   protected $sort = viewChild(MatSort);
@@ -84,5 +88,10 @@ export class ReservationComponent {
       tap(data => this.reservationService.setListChange(data)),
       tap(() => this.reservationService.setMessageChange('DELETED'))
     ).subscribe();
+  }
+
+  getRoomNumber(idRoom: number) {
+    const room = this.$rooms().find(r => r.idRoom === idRoom);
+    return room ? room.number + ' - ' + room.type : 'N/A';
   }
 }
