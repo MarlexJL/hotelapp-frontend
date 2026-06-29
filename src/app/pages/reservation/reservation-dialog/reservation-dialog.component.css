@@ -1,0 +1,23 @@
+.example-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.example-container > * {
+    width: 100%;
+}
+
+.example-container form {
+    display: flex;
+    flex-direction: column;
+}
+
+.example-container mat-form-field {
+    width: 100%;
+}
+
+.cancel-button {
+    background-color: #f44336;
+    color: white;
+    margin-top: 8px;
+}

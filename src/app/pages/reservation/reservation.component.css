@@ -1,0 +1,14 @@
+table {
+  width: 100%;
+}
+
+.mat-mdc-form-field {
+  font-size: 14px;
+  width: 100%;
+}
+
+.delete-button {
+  background-color: #f44336;
+  color: white;
+  margin-left: 8px;
+}

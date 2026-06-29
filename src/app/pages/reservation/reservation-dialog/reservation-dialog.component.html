@@ -1,0 +1,57 @@
+<mat-dialog-content>
+  <mat-toolbar>
+    <span>Reservation Info</span>
+  </mat-toolbar>
+
+  <div class="example-container">
+    <form [formGroup]="$form()">
+      <mat-form-field>
+        <mat-label>Customer Name</mat-label>
+        <input matInput placeholder="Customer Name" formControlName="customerName" />
+        @if ($f()['customerName'].errors?.['required'] && $f()['customerName'].touched) {
+          <mat-error>Customer name is required</mat-error>
+        }
+        @if ($f()['customerName'].errors?.['minlength'] && $f()['customerName'].touched) {
+          <mat-error>Name must be at least 3 characters</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Room ID</mat-label>
+        <input matInput type="number" placeholder="Room ID" formControlName="idRoom" />
+        @if ($f()['idRoom'].errors?.['required'] && $f()['idRoom'].touched) {
+          <mat-error>Room is required</mat-error>
+        }
+        @if ($f()['idRoom'].errors?.['min'] && $f()['idRoom'].touched) {
+          <mat-error>Room ID must be valid</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Check-In Date</mat-label>
+        <input matInput type="date" formControlName="checkInDate" />
+        @if ($f()['checkInDate'].errors?.['required'] && $f()['checkInDate'].touched) {
+          <mat-error>Check-in date is required</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Check-Out Date</mat-label>
+        <input matInput type="date" formControlName="checkOutDate" />
+        @if ($f()['checkOutDate'].errors?.['required'] && $f()['checkOutDate'].touched) {
+          <mat-error>Check-out date is required</mat-error>
+        }
+      </mat-form-field>
+    </form>
+
+    <button mat-flat-button (click)="operate()">
+      <span>OK</span>
+      <mat-icon>done</mat-icon>
+    </button>
+
+    <button mat-flat-button class="cancel-button" (click)="close()">
+      <span>Cancel</span>
+      <mat-icon>cancel</mat-icon>
+    </button>
+  </div>
+</mat-dialog-content>
