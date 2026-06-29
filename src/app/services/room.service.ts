@@ -8,4 +8,8 @@ import { environment } from '../../environments/environment.development';
 })
 export class RoomService extends GenericSignalService<Room> {
   protected override url = `${environment.HOST}/v1/rooms`;
+
+  findAllAvailableRooms(){
+    return this.http.get<Room[]>(`${this.url}/available`);
+  }
 }

@@ -47,7 +47,7 @@ export class ReservationDialogComponent {
     checkOutDate: new FormControl<string>(this.data?.checkOutDate || '', [Validators.required]),
   }));
 
-  protected $rooms = toSignal(this.roomService.findAll(), { initialValue: [] });
+  protected $rooms = toSignal(this.roomService.findAllAvailableRooms(), { initialValue: [] });
   protected $isEdit = computed(() => this.$form().value.idReservation > 0);
   protected $f = computed(() => this.$form().controls);
 
