@@ -1,5 +1,5 @@
 import { Component, computed, inject, signal } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -15,6 +15,15 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { format } from 'date-fns';
+
+function checkOutAfterCheckIn(group: AbstractControl): ValidationErrors | null {
+  const checkIn = group.get('checkInDate')?.value;
+  const checkOut = group.get('checkOutDate')?.value;
+  if (checkIn && checkOut && new Date(checkOut) <= new Date(checkIn)) {
+    return { checkOutBeforeCheckIn: true };
+  }
+  return null;
+}
 
 @Component({
   selector: 'app-reservation-dialog',
@@ -45,7 +54,7 @@ export class ReservationDialogComponent {
     idRoom: new FormControl<number>(this.data?.idRoom || null, [Validators.required, Validators.min(1)]),
     checkInDate: new FormControl<string>(this.data?.checkInDate || '', [Validators.required]),
     checkOutDate: new FormControl<string>(this.data?.checkOutDate || '', [Validators.required]),
-  }));
+  }, { validators: checkOutAfterCheckIn }));
 
   protected $rooms = toSignal(this.roomService.findAllAvailableRooms(), { initialValue: [] });
   protected $isEdit = computed(() => this.$form().value.idReservation > 0);

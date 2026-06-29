@@ -41,7 +41,7 @@
 
       <mat-form-field>
         <mat-label>Check-Out Date</mat-label>
-        <input matInput [matDatepicker]="pickerOut" formControlName="checkOutDate" [min]="$minDate()" />
+        <input matInput [matDatepicker]="pickerOut" formControlName="checkOutDate" [min]="$f()['checkInDate'].value || $minDate()" />
         <mat-hint>DD/MM/YYYY</mat-hint>
         <mat-datepicker-toggle matIconSuffix [for]="pickerOut"></mat-datepicker-toggle>
         <mat-datepicker #pickerOut></mat-datepicker>
@@ -49,6 +49,10 @@
           <mat-error>Check-out date is required</mat-error>
         }
       </mat-form-field>
+
+      @if ($form().errors?.['checkOutBeforeCheckIn'] && $f()['checkOutDate'].touched) {
+        <mat-error>Check-out date must be after check-in date</mat-error>
+      }
     </form>
 
     <button mat-flat-button (click)="operate()">
