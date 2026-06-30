@@ -2,4 +2,4 @@
 
 Tiene implementado navegacion para navegar entre Habitaciones y Reservas
 
-Levantar la aplicacion en ```http://localhost:4200/``
+Levantar la aplicacionit en ```http://localhost:4200/``
